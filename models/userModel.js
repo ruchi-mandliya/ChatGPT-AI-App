@@ -44,7 +44,7 @@ userSchema.methods.matchPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-//SIGN TOKEN
+//generate TOKEN
 userSchema.methods.getSignedToken = function (res) {
   const acccesToken = JWT.sign(
     { id: this._id },
