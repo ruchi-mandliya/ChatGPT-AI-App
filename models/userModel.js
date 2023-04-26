@@ -28,7 +28,9 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+//hashed password
 userSchema.pre("save", async function (next) {
+  //update
   if (!this.isModified("password")) {
     next();
   }
@@ -37,14 +39,17 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+//match password
 userSchema.methods.matchPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
+
+//SIGN TOKEN
 userSchema.methods.getSignedToken = function (res) {
-  const accessToken = JWT.sign(
+  const acccesToken = JWT.sign(
     { id: this._id },
     process.env.JWT_ACCESS_SECRET,
-    { expiresIn: JWT_ACCESS_EXPIREIN }
+    { expiresIn: process.env.JWT_ACCESS_EXPIREIN }
   );
   const refreshToken = JWT.sign(
     { id: this._id },
